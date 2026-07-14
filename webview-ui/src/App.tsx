@@ -1,12 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { toMajorMinor } from './changelogData.js';
+import { AgentActivityPanel } from './components/AgentActivityPanel.js';
 import { BottomToolbar } from './components/BottomToolbar.js';
 import { ChangelogModal } from './components/ChangelogModal.js';
 import { DebugView } from './components/DebugView.js';
 import { EditActionBar } from './components/EditActionBar.js';
 import { MigrationNotice } from './components/MigrationNotice.js';
 import { SettingsModal } from './components/SettingsModal.js';
+import { TeamConsole } from './components/TeamConsole.js';
 import { Tooltip } from './components/Tooltip.js';
 import { Modal } from './components/ui/Modal.js';
 import { VersionIndicator } from './components/VersionIndicator.js';
@@ -29,6 +31,22 @@ import { transport } from './transport/index.js';
 // Game state lives outside React — updated imperatively by message handlers
 const officeStateRef = { current: null as OfficeState | null };
 const editorState = new EditorState();
+const PERSONAL_TEAM = {
+  codex: {
+    id: -101,
+    name: 'CodeX',
+    palette: 0,
+    workSeat: 'f-1773356768339-eo6u',
+    restSeat: 'f-1773354668333-lo7w',
+  },
+  claude: {
+    id: -102,
+    name: 'Cloudy',
+    palette: 3,
+    workSeat: 'f-1773356769007-a8jm',
+    restSeat: 'f-1773354665989-zgrw',
+  },
+} as const;
 
 // Test-only observability hooks (message/sound logs, addAgent wrapper, selectAgent).
 // Installed only under the e2e harness so they never patch prototypes or grow
@@ -82,6 +100,47 @@ function App() {
     setHooksEnabled,
     hooksInfoShown,
   } = useExtensionMessages(getOfficeState, editor.setLastSavedLayout, isEditDirty);
+
+  useEffect(() => {
+    if (!isBrowserRuntime || !layoutReady) return;
+    const office = getOfficeState();
+    const syncTeam = (
+      detail: { activeAgent?: 'claude' | 'codex'; limitedAgents?: Array<'claude' | 'codex'> } = {},
+    ) => {
+      const limited = new Set(detail.limitedAgents ?? []);
+      for (const id of [...office.characters.keys()]) {
+        if (id >= 0) office.removeAgent(id);
+      }
+      for (const [provider, member] of Object.entries(PERSONAL_TEAM) as Array<
+        ['codex' | 'claude', typeof PERSONAL_TEAM.codex]
+      >) {
+        office.addAgent(member.id, member.palette, 0, member.workSeat, true);
+        const character = office.characters.get(member.id);
+        if (!character) continue;
+        character.agentName = member.name;
+        character.personalStatus = limited.has(provider)
+          ? 'limited'
+          : detail.activeAgent === provider
+            ? 'working'
+            : undefined;
+        character.currentTool = detail.activeAgent === provider ? 'Task' : null;
+        office.setAgentActive(member.id, true);
+        office.reassignSeat(member.id, limited.has(provider) ? member.restSeat : member.workSeat);
+      }
+    };
+    const onTeamState = (event: Event) =>
+      syncTeam(
+        (
+          event as CustomEvent<{
+            activeAgent?: 'claude' | 'codex';
+            limitedAgents?: Array<'claude' | 'codex'>;
+          }>
+        ).detail,
+      );
+    syncTeam();
+    window.addEventListener('personal-team-state', onTeamState);
+    return () => window.removeEventListener('personal-team-state', onTeamState);
+  }, [layoutReady]);
 
   // Show migration notice once layout reset is detected
   const [migrationNoticeDismissed, setMigrationNoticeDismissed] = useState(false);
@@ -216,7 +275,7 @@ function App() {
               className="absolute left-1/2 -translate-x-1/2 z-11 bg-accent-bright text-white text-sm py-3 px-8 rounded-none border-2 border-accent shadow-pixel pointer-events-none whitespace-nowrap"
               style={{ top: editor.isDirty ? 64 : 8 }}
             >
-              Rotate (R)
+              Повернуть (R)
             </div>
           )}
 
@@ -278,7 +337,7 @@ function App() {
       {/* Hooks first-run tooltip */}
       {!hooksInfoShown && !hooksTooltipDismissed && (
         <Tooltip
-          title="Instant Detection Active"
+          title="Мгновенное отслеживание активно"
           position="top-right"
           onDismiss={() => {
             setHooksTooltipDismissed(true);
@@ -286,7 +345,7 @@ function App() {
           }}
         >
           <span className="text-sm text-text leading-none">
-            Your agents now respond in real-time.{' '}
+            Ваши агенты теперь обновляются в реальном времени.{' '}
             <span
               className="text-accent cursor-pointer underline"
               onClick={() => {
@@ -295,7 +354,7 @@ function App() {
                 transport.send({ type: 'setHooksInfoShown' });
               }}
             >
-              View more
+              Подробнее
             </span>
           </span>
         </Tooltip>
@@ -305,30 +364,30 @@ function App() {
       <Modal
         isOpen={isHooksInfoOpen}
         onClose={() => setIsHooksInfoOpen(false)}
-        title="Instant Detection is ON"
+        title="Мгновенное отслеживание включено"
         zIndex={52}
       >
         <div className="text-base text-text px-10" style={{ lineHeight: 1.4 }}>
-          <p className="mb-8">Your Pixel Agents office now reacts in real-time:</p>
+          <p className="mb-8">Офис Pixel Agents теперь реагирует в реальном времени:</p>
           <ul className="mb-8 pl-18 list-disc m-0">
-            <li className="text-sm mb-2">Permission prompts appear instantly</li>
-            <li className="text-sm mb-2">Turn completions detected the moment they happen</li>
-            <li className="text-sm mb-2">Sound notifications play immediately</li>
+            <li className="text-sm mb-2">Запросы разрешений появляются сразу</li>
+            <li className="text-sm mb-2">Завершение работы фиксируется в момент события</li>
+            <li className="text-sm mb-2">Звуковые уведомления воспроизводятся сразу</li>
           </ul>
           <p className="mb-12 text-text-muted">
-            This works through Claude Code Hooks, small event listeners that notify Pixel Agents
-            whenever something happens in your Claude sessions.
+            Это работает через Claude Code Hooks: небольшие обработчики событий сообщают Pixel
+            Agents обо всём, что происходит в ваших сессиях Claude.
           </p>
           <div className="text-center">
             <button
               onClick={() => setIsHooksInfoOpen(false)}
               className="py-4 px-20 text-lg bg-accent text-white border-2 border-accent rounded-none cursor-pointer shadow-pixel"
             >
-              Got it
+              Понятно
             </button>
           </div>
           <p className="mt-8 text-xs text-text-muted text-center">
-            To disable, go to Settings {'>'} Instant Detection
+            Чтобы отключить: Настройки {'>'} Мгновенное отслеживание
           </p>
         </div>
       </Modal>
@@ -341,6 +400,13 @@ function App() {
         onToggleSettings={() => setIsSettingsOpen((v) => !v)}
         workspaceFolders={workspaceFolders}
       />
+
+      {isBrowserRuntime && (
+        <>
+          <AgentActivityPanel />
+          <TeamConsole />
+        </>
+      )}
 
       <VersionIndicator
         currentVersion={extensionVersion}

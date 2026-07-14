@@ -23,6 +23,10 @@ import {
   GRID_LINE_COLOR,
   HOVERED_OUTLINE_ALPHA,
   OUTLINE_Z_SORT_OFFSET,
+  PERSONAL_AGENT_LIMIT_FILL_COLOR,
+  PERSONAL_AGENT_LIMIT_STROKE_COLOR,
+  PERSONAL_AGENT_NAME_FILL_COLOR,
+  PERSONAL_AGENT_NAME_STROKE_COLOR,
   ROTATE_BUTTON_BG,
   SEAT_AVAILABLE_COLOR,
   SEAT_BUSY_COLOR,
@@ -237,6 +241,33 @@ export function renderScene(
 
   for (const d of drawables) {
     d.draw(ctx);
+  }
+
+  // Permanent personal-team names stay visible even when no tooltip is open.
+  for (const ch of characters) {
+    if (!ch.agentName || ch.matrixEffect) continue;
+    const fontSize = Math.max(9, Math.round(8 * zoom));
+    const labelX = Math.round(offsetX + ch.x * zoom);
+    const labelY = Math.round(offsetY + ch.y * zoom - 24 * zoom);
+    ctx.save();
+    ctx.font = `bold ${fontSize}px monospace`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'bottom';
+    ctx.lineWidth = Math.max(2, Math.round(2 * zoom));
+    ctx.strokeStyle = PERSONAL_AGENT_NAME_STROKE_COLOR;
+    ctx.strokeText(ch.agentName, labelX, labelY);
+    ctx.fillStyle = PERSONAL_AGENT_NAME_FILL_COLOR;
+    ctx.fillText(ch.agentName, labelX, labelY);
+    if (ch.personalStatus === 'limited') {
+      const statusY = labelY + Math.max(10, Math.round(10 * zoom));
+      ctx.font = `bold ${Math.max(7, Math.round(6 * zoom))}px monospace`;
+      ctx.lineWidth = Math.max(1, Math.round(zoom));
+      ctx.strokeStyle = PERSONAL_AGENT_LIMIT_STROKE_COLOR;
+      ctx.strokeText('ЛИМИТ', labelX, statusY);
+      ctx.fillStyle = PERSONAL_AGENT_LIMIT_FILL_COLOR;
+      ctx.fillText('ЛИМИТ', labelX, statusY);
+    }
+    ctx.restore();
   }
 }
 

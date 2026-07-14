@@ -1,0 +1,10 @@
+{
+  "name": "Pixel Agents Personal Team",
+  "short_name": "Pixel Agents",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#181828",
+  "theme_color": "#181828",
+  "description": "Personal Claude and Codex team workspace.",
+  "icons": [{ "src": "/icon.png", "sizes": "512x512", "type": "image/png" }]
+}

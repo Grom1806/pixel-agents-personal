@@ -175,7 +175,7 @@ function handleWebviewReady(send: WsSend, ctx: ClientMessageContext): void {
   // 4. Settings (from adapter, with sensible defaults when adapter is absent)
   const cfg = readConfig();
   const watchAllSessions = adapter?.getSetting(KEY_WATCH_ALL_SESSIONS, false) ?? false;
-  const hooksEnabled = adapter?.getSetting(KEY_HOOKS_ENABLED, true) ?? true;
+  const hooksEnabled = adapter?.getSetting(KEY_HOOKS_ENABLED, false) ?? false;
   send({
     type: 'settingsLoaded',
     soundEnabled: adapter?.getSetting(KEY_SOUND_ENABLED, true) ?? true,

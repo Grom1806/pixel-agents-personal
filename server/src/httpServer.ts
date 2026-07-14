@@ -10,6 +10,15 @@ import type { AgentStateStore } from './agentStateStore.js';
 import type { AssetCache, SetHooksEnabledSideEffect } from './clientMessageHandler.js';
 import { handleClientMessage } from './clientMessageHandler.js';
 import { HOOK_API_PREFIX, MAX_HOOK_BODY_SIZE } from './constants.js';
+import { TeamOrchestrator } from './teamOrchestrator.js';
+import {
+  archiveTask,
+  createProject,
+  createTask,
+  readWorkspace,
+  type TaskPriority,
+  updateTask,
+} from './teamWorkspaceStore.js';
 import type { AgentState } from './types.js';
 
 /** Options for creating the HTTP + WebSocket server. */
@@ -34,6 +43,7 @@ export interface HttpServerOptions {
   onHookEvent?: (providerId: string, event: Record<string, unknown>) => void;
   /** Invoked when setHooksEnabled is toggled via WebSocket. Standalone installs/uninstalls hooks here. */
   onSetHooksEnabled?: SetHooksEnabledSideEffect;
+  orchestrator?: TeamOrchestrator;
 }
 
 /** Result of createHttpServer(). */
@@ -74,6 +84,7 @@ export async function createHttpServer(options: HttpServerOptions): Promise<Http
   // ── Routes ──────────────────────────────────────────────────
 
   registerHealthRoute(app);
+  registerTeamRoutes(app, options.orchestrator ?? new TeamOrchestrator());
   registerHookRoute(app, options);
   registerWebSocketRoute(app, options);
 
@@ -94,6 +105,104 @@ function registerHealthRoute(app: FastifyInstance): void {
     uptime: Math.floor((Date.now() - startTime) / 1000),
     pid: process.pid,
   }));
+}
+
+function registerTeamRoutes(app: FastifyInstance, orchestrator: TeamOrchestrator): void {
+  app.get('/api/team/state', async () => readWorkspace());
+  app.post<{ Body: { name?: unknown; path?: unknown; description?: unknown } }>(
+    '/api/team/projects',
+    async (request, reply) => {
+      const name = typeof request.body?.name === 'string' ? request.body.name : '';
+      const projectPath = typeof request.body?.path === 'string' ? request.body.path : '';
+      if (!name.trim() || !projectPath.trim())
+        return reply.code(400).send({ error: 'Укажите название проекта и путь к его папке.' });
+      return {
+        project: createProject({
+          name,
+          path: projectPath,
+          description:
+            typeof request.body?.description === 'string' ? request.body.description : '',
+        }),
+      };
+    },
+  );
+  app.post<{
+    Body: {
+      projectId?: unknown;
+      title?: unknown;
+      priority?: unknown;
+      dueAt?: unknown;
+      tags?: unknown;
+    };
+  }>('/api/team/tasks', async (request, reply) => {
+    const projectId = typeof request.body?.projectId === 'string' ? request.body.projectId : '';
+    const title = typeof request.body?.title === 'string' ? request.body.title : '';
+    const priorities: TaskPriority[] = ['low', 'normal', 'high', 'urgent'];
+    const priority = priorities.includes(request.body?.priority as TaskPriority)
+      ? (request.body?.priority as TaskPriority)
+      : 'normal';
+    const dueAt =
+      typeof request.body?.dueAt === 'string' && !Number.isNaN(Date.parse(request.body.dueAt))
+        ? request.body.dueAt
+        : undefined;
+    const tags = Array.isArray(request.body?.tags)
+      ? request.body.tags.filter((tag): tag is string => typeof tag === 'string')
+      : [];
+    if (!projectId || !title.trim())
+      return reply.code(400).send({ error: 'Выберите проект и опишите задачу.' });
+    return { task: createTask({ projectId, title, priority, dueAt, tags }) };
+  });
+  app.patch<{
+    Params: { id: string };
+    Body: { archived?: unknown; priority?: unknown; dueAt?: unknown; tags?: unknown };
+  }>('/api/team/tasks/:id', async (request, reply) => {
+    const current = readWorkspace().tasks.find((task) => task.id === request.params.id);
+    if (!current) return reply.code(404).send({ error: 'Задача не найдена.' });
+    if (typeof request.body?.archived === 'boolean')
+      return { task: archiveTask(current.id, request.body.archived) };
+    const priorities: TaskPriority[] = ['low', 'normal', 'high', 'urgent'];
+    const priority = priorities.includes(request.body?.priority as TaskPriority)
+      ? (request.body?.priority as TaskPriority)
+      : current.priority;
+    const dueAt =
+      typeof request.body?.dueAt === 'string' && !Number.isNaN(Date.parse(request.body.dueAt))
+        ? request.body.dueAt
+        : current.dueAt;
+    const tags = Array.isArray(request.body?.tags)
+      ? request.body.tags.filter((tag): tag is string => typeof tag === 'string').slice(0, 8)
+      : current.tags;
+    return { task: updateTask(current.id, { priority, dueAt, tags }) };
+  });
+  app.post<{ Params: { id: string }; Body: { confirmed?: unknown } }>(
+    '/api/team/tasks/:id/start',
+    async (request, reply) => {
+      const state = readWorkspace();
+      const task = state.tasks.find((entry) => entry.id === request.params.id);
+      const project = task && state.projects.find((entry) => entry.id === task.projectId);
+      if (!task || !project)
+        return reply.code(404).send({ error: 'Задача или проект не найдены.' });
+      if (task.archived)
+        return reply.code(409).send({ error: 'Архивную задачу нельзя запускать.' });
+      if (needsConfirmation(task.title) && request.body?.confirmed !== true) {
+        updateTask(task.id, { status: 'awaiting_confirmation', activeAgent: undefined });
+        return reply
+          .code(428)
+          .send({
+            error: 'Задача может менять или удалять важные данные. Подтвердите запуск.',
+            requiresConfirmation: true,
+          });
+      }
+      if (!orchestrator.start(task, project))
+        return reply.code(409).send({ error: 'Эта задача уже выполняется.' });
+      return { started: true };
+    },
+  );
+}
+
+function needsConfirmation(title: string): boolean {
+  return /\b(rm\s+-rf|remove-item|del\s+\/|drop\s+(table|database)|truncate\s+table|format\s+[a-z]:|delete\s+from|production deploy|deploy to prod)\b/i.test(
+    title,
+  );
 }
 
 // ── Hook Events ────────────────────────────────────────────────

@@ -17,7 +17,7 @@ export function ChangelogModal({ isOpen, onClose, currentVersion }: ChangelogMod
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={<span className="text-4xl">What's New in v{entry.version}</span>}
+      title={<span className="text-4xl">Что нового в v{entry.version}</span>}
       zIndex={51}
       className="min-w-sm!"
     >
@@ -39,7 +39,7 @@ export function ChangelogModal({ isOpen, onClose, currentVersion }: ChangelogMod
         {/* Contributors */}
         {entry.contributors.length > 0 && (
           <div className="mb-8">
-            <div className="text-lg text-accent-bright mb-4">Contributors</div>
+            <div className="text-lg text-accent-bright mb-4">Участники</div>
             <ul className="m-0 pl-18 list-disc">
               {entry.contributors.map((c) => (
                 <li key={c.name} className="text-sm mb-2">
@@ -68,7 +68,7 @@ export function ChangelogModal({ isOpen, onClose, currentVersion }: ChangelogMod
           rel="noopener noreferrer"
           className="text-lg no-underline cursor-pointer transition-colors duration-200 hover:text-accent-bright"
         >
-          View on GitHub
+          Открыть на GitHub
         </a>
       </div>
     </Modal>

@@ -24,6 +24,8 @@
 
 <br/>
 
+> **Personal team edition:** for the Windows setup, Russian guide and the CodeX + Cloudy workspace, see [README-PERSONAL.md](README-PERSONAL.md).
+
 Pixel Agents turns multi-agent AI systems into something you can actually see and manage. Each agent becomes a character in a pixel art office. They walk around, sit at their desk, and visually reflect what they are doing — typing when writing code, reading when searching files, waiting when it needs your attention.
 
 It ships in **two flavors from the same source tree**:

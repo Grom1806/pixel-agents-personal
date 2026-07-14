@@ -73,6 +73,10 @@ export const BUTTON_ICON_COLOR = '#fff';
 export const CANVAS_FALLBACK_TILE_COLOR = '#444';
 export const CANVAS_ERROR_TILE_COLOR = '#FF00FF';
 export const WALL_COLOR = '#3A3A5C';
+export const PERSONAL_AGENT_NAME_STROKE_COLOR = '#152235';
+export const PERSONAL_AGENT_NAME_FILL_COLOR = '#f7fbff';
+export const PERSONAL_AGENT_LIMIT_STROKE_COLOR = '#3b1117';
+export const PERSONAL_AGENT_LIMIT_FILL_COLOR = '#ff6b72';
 
 // ── Camera ───────────────────────────────────────────────────
 export const CAMERA_FOLLOW_LERP = 0.1;

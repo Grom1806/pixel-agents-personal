@@ -18,6 +18,9 @@ async function main() {
       <App />
     </StrictMode>,
   );
+  if (isBrowserRuntime && 'serviceWorker' in navigator) {
+    void navigator.serviceWorker.register('/sw.js');
+  }
 }
 
 main().catch(console.error);

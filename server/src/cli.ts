@@ -24,6 +24,7 @@ import type { AssetCache } from './clientMessageHandler.js';
 import { FileStateAdapter } from './fileStateAdapter.js';
 import { claudeProvider, copyHookScript } from './providers/index.js';
 import { PixelAgentsServer } from './server.js';
+import { TeamOrchestrator } from './teamOrchestrator.js';
 
 // ── Argument parsing ──────────────────────────────────────────
 
@@ -59,8 +60,10 @@ Options:
 async function main(): Promise<void> {
   const args = parseArgs(process.argv.slice(2));
 
-  // dist/ contains both the CLI bundle and the assets/ + webview/ directories
-  const distRoot = __dirname;
+  // Packaged CLI runs from dist/. During source development, use the existing
+  // dist/ directory so the server still sees the browser build and copied assets.
+  const distRoot =
+    path.basename(__dirname) === 'src' ? path.resolve(__dirname, '../../dist') : __dirname;
   const staticDir = path.join(distRoot, 'webview');
 
   // ── Load assets on startup (same pipeline as VS Code extension) ──
@@ -83,6 +86,7 @@ async function main(): Promise<void> {
   // ── Store + adapter (shared settings + standalone-scoped agents/seats) ──
   const store = new AgentStateStore();
   const adapter = new FileStateAdapter({ namespace: 'standalone' });
+  adapter.setSetting('pixel-agents.hooksEnabled', false);
   store.setAdapter(adapter);
 
   // ── Create server ──
@@ -91,6 +95,8 @@ async function main(): Promise<void> {
   try {
     // Create runtime first (before server.start, so we can pass it in)
     const runtime = new AgentRuntime(store, claudeProvider);
+    const orchestrator = new TeamOrchestrator();
+    orchestrator.recoverInterruptedTasks();
 
     // Wire hook events: HTTP POST -> runtime -> hookEventHandler -> agents
     server.onHookEvent((providerId, event) => {
@@ -124,11 +130,14 @@ async function main(): Promise<void> {
       staticDir,
       assetCache,
       onSetHooksEnabled,
+      orchestrator,
     });
     currentConfig = { port: config.port, token: config.token };
 
     // Sync runtime refs with persisted settings BEFORE first scan tick
-    runtime.hooksEnabled.current = adapter.getSetting('pixel-agents.hooksEnabled', true);
+    // Standalone starts in observation-safe mode. The user can enable Claude hooks
+    // from Settings after checking that they do not conflict with existing hooks.
+    runtime.hooksEnabled.current = false;
     runtime.watchAllSessions.current = adapter.getSetting('pixel-agents.watchAllSessions', false);
 
     // Install hooks on startup if the persisted setting says so

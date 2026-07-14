@@ -126,3 +126,1625 @@
     opacity: 0.3;
   }
 }
+
+.global-team-chat {
+  position: absolute;
+  z-index: 60;
+  top: 18px;
+  right: 18px;
+  width: min(390px, calc(100vw - 36px));
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+.team-chat-toggle {
+  width: 100%;
+  border: 2px solid #d8f06d;
+  background: #171c19;
+  color: #edf4e7;
+  padding: 10px 12px;
+  text-align: left;
+  font:
+    700 12px/1 ui-monospace,
+    SFMono-Regular,
+    Consolas,
+    monospace;
+  cursor: pointer;
+}
+.team-chat-panel {
+  margin-top: 7px;
+  border: 2px solid #526157;
+  background: #151a17ee;
+  box-shadow: 5px 5px 0 #080b09;
+}
+.team-chat-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px;
+  border-bottom: 1px solid #425047;
+}
+.team-chat-heading span {
+  display: block;
+  color: #d8f06d;
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+.team-chat-heading strong {
+  display: block;
+  margin-top: 5px;
+  color: #edf4e7;
+  font-size: 12px;
+}
+.team-chat-heading i {
+  width: 9px;
+  height: 9px;
+  background: #8be29a;
+  box-shadow: 0 0 0 3px #8be29a22;
+}
+.team-chat-project {
+  padding: 10px;
+  border-bottom: 1px solid #425047;
+}
+.team-chat-project input,
+.team-chat-composer textarea {
+  width: 100%;
+  border: 1px solid #536158;
+  background: #0d120f;
+  color: #edf4e7;
+  padding: 9px;
+  outline: none;
+  font:
+    12px/1.35 ui-monospace,
+    SFMono-Regular,
+    Consolas,
+    monospace;
+}
+.team-chat-feed {
+  max-height: 280px;
+  overflow: auto;
+  padding: 12px;
+}
+.team-chat-empty {
+  margin: 0;
+  color: #a5b0a7;
+  font:
+    12px/1.5 ui-monospace,
+    SFMono-Regular,
+    Consolas,
+    monospace;
+}
+.team-chat-message {
+  border-left: 3px solid #d8f06d;
+  margin: 0 0 12px;
+  padding: 7px 9px;
+  background: #202823;
+}
+.team-chat-message small {
+  color: #d8f06d;
+  font-size: 9px;
+  letter-spacing: 1px;
+}
+.team-chat-message p {
+  margin: 5px 0 0;
+  color: #edf4e7;
+  white-space: pre-wrap;
+  font:
+    12px/1.45 ui-monospace,
+    SFMono-Regular,
+    Consolas,
+    monospace;
+}
+.team-chat-message em {
+  display: block;
+  margin-top: 7px;
+  color: #9aa89d;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 10px;
+}
+.team-chat-composer {
+  border-top: 1px solid #425047;
+  padding: 10px;
+}
+.team-chat-composer textarea {
+  min-height: 82px;
+  resize: vertical;
+}
+.team-chat-composer button {
+  width: 100%;
+  margin-top: 8px;
+  border: 0;
+  background: #d8f06d;
+  color: #172000;
+  padding: 10px;
+  font:
+    800 12px/1 ui-monospace,
+    SFMono-Regular,
+    Consolas,
+    monospace;
+  cursor: pointer;
+}
+.team-chat-error {
+  margin: 0;
+  padding: 8px 10px;
+  color: #ffaaa2;
+  font:
+    11px/1.3 ui-monospace,
+    SFMono-Regular,
+    Consolas,
+    monospace;
+}
+
+.team-console {
+  position: absolute;
+  inset: 16px 16px auto auto;
+  z-index: 60;
+  width: min(740px, calc(100vw - 32px));
+  color: #edf4e7;
+  background: #111612f2;
+  border: 2px solid #526157;
+  box-shadow: 5px 5px 0 #080b09;
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+.team-console-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 14px;
+  border-bottom: 1px solid #425047;
+}
+.team-console-head span {
+  display: block;
+  color: #d8f06d;
+  font:
+    700 9px/1 ui-monospace,
+    SFMono-Regular,
+    Consolas,
+    monospace;
+  letter-spacing: 1px;
+}
+.team-console-head strong {
+  display: block;
+  margin-top: 5px;
+  font:
+    700 12px/1 ui-monospace,
+    SFMono-Regular,
+    Consolas,
+    monospace;
+}
+.team-console-head button {
+  width: 31px;
+  height: 31px;
+  border: 1px solid #d8f06d;
+  color: #d8f06d;
+  background: transparent;
+  font-size: 20px;
+  cursor: pointer;
+}
+.panel-move-handle {
+  flex: 0 0 auto;
+  width: 25px !important;
+  height: 25px !important;
+  margin-right: 9px;
+  border: 1px solid #536158 !important;
+  color: #b9d0b9 !important;
+  background: #202a21 !important;
+  cursor: move !important;
+  font:
+    17px/1 Arial,
+    sans-serif !important;
+  touch-action: none;
+}
+.panel-move-handle:hover,
+.panel-move-handle:focus-visible {
+  color: #162015 !important;
+  background: #d8f06d !important;
+  outline: 1px solid #f3ffd0;
+  outline-offset: 2px;
+}
+.team-console-head > div:nth-child(2) {
+  margin-right: auto;
+}
+.agent-activity-panel header {
+  display: flex;
+  align-items: center;
+}
+.agent-activity-panel header > div {
+  min-width: 0;
+}
+.team-console-body {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr);
+  min-height: 410px;
+}
+.project-list {
+  padding: 8px;
+  border-right: 1px solid #425047;
+  background: #171d19;
+  overflow: auto;
+}
+.project-list p,
+.empty,
+.no-project {
+  margin: 0;
+  color: #9aa89d;
+  font:
+    11px/1.5 ui-monospace,
+    SFMono-Regular,
+    Consolas,
+    monospace;
+}
+.project-list button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  color: #cbd5cb;
+  border: 1px solid transparent;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+.project-list button.selected {
+  border-color: #d8f06d;
+  background: #293126;
+}
+.project-list strong,
+.project-list small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.project-list strong {
+  font:
+    700 12px/1.2 ui-monospace,
+    SFMono-Regular,
+    Consolas,
+    monospace;
+}
+.project-list small {
+  margin-top: 4px;
+  color: #8c9b90;
+  font-size: 9px;
+}
+.team-workspace {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+}
+.project-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 13px;
+  border-bottom: 1px solid #425047;
+}
+.project-title strong,
+.project-title small {
+  display: block;
+}
+.project-title strong {
+  font-size: 13px;
+}
+.project-title small {
+  max-width: 390px;
+  overflow: hidden;
+  color: #9aa89d;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 9px;
+}
+.project-title span {
+  border: 1px solid #7bc698;
+  color: #7bc698;
+  padding: 4px 6px;
+  font-size: 9px;
+  text-transform: uppercase;
+}
+.team-feed {
+  flex: 1;
+  min-height: 160px;
+  max-height: 255px;
+  overflow: auto;
+  padding: 12px;
+}
+.team-message {
+  margin-bottom: 10px;
+  border-left: 3px solid #607166;
+  padding: 7px 9px;
+  background: #1d251f;
+}
+.team-message.you {
+  border-color: #d8f06d;
+}
+.team-message.claude {
+  border-color: #f3a767;
+}
+.team-message.codex {
+  border-color: #75c9b7;
+}
+.team-message small {
+  color: #aab7ac;
+  font-size: 9px;
+  letter-spacing: 1px;
+}
+.team-message p {
+  margin: 5px 0 0;
+  white-space: pre-wrap;
+  font:
+    11px/1.45 ui-monospace,
+    SFMono-Regular,
+    Consolas,
+    monospace;
+}
+.team-composer {
+  display: grid;
+  grid-template-columns: 1fr 118px;
+  gap: 8px;
+  padding: 10px;
+  border-top: 1px solid #425047;
+}
+.team-composer textarea,
+.project-form input {
+  min-width: 0;
+  border: 1px solid #536158;
+  background: #0d120f;
+  color: #edf4e7;
+  padding: 8px;
+  outline: none;
+  font:
+    11px/1.35 ui-monospace,
+    SFMono-Regular,
+    Consolas,
+    monospace;
+}
+.team-composer textarea {
+  min-height: 58px;
+  resize: vertical;
+}
+.team-composer button,
+.project-form button,
+.task-row button {
+  border: 0;
+  background: #d8f06d;
+  color: #172000;
+  padding: 8px;
+  font:
+    800 10px/1 ui-monospace,
+    SFMono-Regular,
+    Consolas,
+    monospace;
+  cursor: pointer;
+}
+.task-list {
+  border-top: 1px solid #425047;
+  max-height: 140px;
+  overflow: auto;
+}
+.task-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 10px;
+  border-bottom: 1px solid #29332d;
+}
+.task-row p {
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 10px;
+}
+.task-row small {
+  color: #9aa89d;
+  font-size: 9px;
+}
+.task-status {
+  color: #d8f06d;
+  font-size: 9px;
+  text-transform: uppercase;
+}
+.project-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 7px;
+  padding: 9px;
+  border-bottom: 1px solid #425047;
+}
+.team-error {
+  margin: 0;
+  padding: 8px 12px;
+  color: #ffaaa2;
+  font-size: 10px;
+}
+.agent-activity-panel {
+  position: absolute;
+  z-index: 40;
+  top: 86px;
+  left: 24px;
+  width: 286px;
+  color: #edf4e7;
+  border: 2px solid #526157;
+  background: #111612ed;
+  box-shadow: 5px 5px 0 #080b09;
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+.agent-activity-panel header {
+  padding: 12px 14px;
+  border-bottom: 1px solid #425047;
+}
+.agent-activity-panel header span {
+  display: block;
+  color: #d8f06d;
+  font:
+    700 9px/1 ui-monospace,
+    SFMono-Regular,
+    Consolas,
+    monospace;
+  letter-spacing: 1px;
+}
+.agent-activity-panel header strong {
+  display: block;
+  margin-top: 5px;
+  font:
+    700 12px/1 ui-monospace,
+    SFMono-Regular,
+    Consolas,
+    monospace;
+}
+.agent-activity-list {
+  padding: 8px;
+}
+.agent-activity {
+  padding: 10px;
+  border-left: 3px solid #75c9b7;
+  background: #1b241e;
+}
+.agent-activity + .agent-activity {
+  margin-top: 8px;
+}
+.agent-activity.active {
+  border-left-color: #d8f06d;
+}
+.agent-activity.paused {
+  border-left-color: #f3a767;
+  background: #2a211b;
+}
+.agent-activity > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.agent-activity strong {
+  font:
+    700 12px/1 ui-monospace,
+    SFMono-Regular,
+    Consolas,
+    monospace;
+}
+.agent-activity span {
+  color: #8c9b90;
+  font:
+    700 8px/1 ui-monospace,
+    SFMono-Regular,
+    Consolas,
+    monospace;
+  letter-spacing: 0.7px;
+}
+.agent-activity.active span {
+  color: #d8f06d;
+}
+.agent-activity.paused span {
+  color: #f3a767;
+}
+.agent-activity p {
+  margin: 8px 0 0;
+  color: #dce5dd;
+  font:
+    11px/1.4 ui-monospace,
+    SFMono-Regular,
+    Consolas,
+    monospace;
+}
+.agent-activity small {
+  display: block;
+  margin-top: 8px;
+  overflow: hidden;
+  color: #9aa89d;
+  font:
+    9px/1.35 ui-monospace,
+    SFMono-Regular,
+    Consolas,
+    monospace;
+}
+.team-console,
+.agent-activity-panel {
+  font-family: 'Segoe UI', 'Noto Sans', Arial, sans-serif;
+  text-rendering: optimizeLegibility;
+}
+.team-console {
+  resize: none;
+  overflow: auto;
+  min-width: 520px;
+  min-height: 400px;
+  max-width: calc(100vw - 32px);
+  max-height: calc(100vh - 32px);
+}
+.agent-activity-panel {
+  resize: none;
+  overflow: auto;
+  min-width: 240px;
+  min-height: 185px;
+  max-width: calc(100vw - 32px);
+  max-height: calc(100vh - 32px);
+}
+.panel-resize-handle {
+  position: absolute;
+  z-index: 2;
+  left: 5px;
+  bottom: 4px;
+  width: 22px;
+  height: 22px;
+  border: 0;
+  color: #d8f06d;
+  background: #1c261e;
+  cursor: nesw-resize;
+  font:
+    16px/1 Arial,
+    sans-serif;
+  touch-action: none;
+}
+.panel-resize-handle:hover,
+.panel-resize-handle:focus-visible {
+  color: #101610;
+  background: #d8f06d;
+  outline: 1px solid #f3ffd0;
+  outline-offset: 2px;
+}
+.team-console-head span,
+.agent-activity-panel header span {
+  font:
+    800 11px/1 'Segoe UI Variable',
+    'Aptos',
+    'Segoe UI',
+    Arial,
+    sans-serif;
+}
+.team-console-head strong,
+.agent-activity-panel header strong {
+  font:
+    700 15px/1.2 'Segoe UI Variable',
+    'Aptos',
+    'Segoe UI',
+    Arial,
+    sans-serif;
+}
+.project-list p,
+.empty,
+.no-project {
+  font:
+    14px/1.55 'Segoe UI Variable',
+    'Aptos',
+    'Segoe UI',
+    Arial,
+    sans-serif;
+  color: #c6d1c7;
+}
+.project-list strong {
+  font:
+    700 15px/1.3 'Segoe UI Variable',
+    'Aptos',
+    'Segoe UI',
+    Arial,
+    sans-serif;
+}
+.project-list small,
+.project-title small {
+  font:
+    12px/1.35 'Segoe UI Variable',
+    'Aptos',
+    'Segoe UI',
+    Arial,
+    sans-serif;
+  color: #bdc9be;
+}
+.project-title strong {
+  font:
+    700 16px/1.25 'Segoe UI Variable',
+    'Aptos',
+    'Segoe UI',
+    Arial,
+    sans-serif;
+}
+.project-title span,
+.task-status,
+.task-row small {
+  font:
+    800 11px/1 'Segoe UI Variable',
+    'Aptos',
+    'Segoe UI',
+    Arial,
+    sans-serif;
+}
+.team-console-actions {
+  display: flex;
+  gap: 7px;
+}
+.team-console-actions button {
+  display: grid;
+  place-items: center;
+}
+.team-console-actions button:first-child {
+  font-size: 18px;
+}
+.team-console-actions button:hover {
+  background: #283425;
+}
+.team-message {
+  padding: 11px 13px;
+  background: #1b251e;
+}
+.team-message small {
+  font:
+    800 11px/1 'Segoe UI Variable',
+    'Aptos',
+    'Segoe UI',
+    Arial,
+    sans-serif;
+  color: #d2ddd3;
+}
+.rich-message {
+  color: #f0f5f0;
+  font:
+    15px/1.58 'Segoe UI Variable',
+    'Aptos',
+    'Segoe UI',
+    Arial,
+    sans-serif;
+}
+.rich-message p {
+  margin: 9px 0 0;
+}
+.rich-message h3 {
+  margin: 13px 0 6px;
+  color: #e6f58a;
+  font:
+    750 16px/1.25 'Segoe UI Variable',
+    'Aptos',
+    'Segoe UI',
+    Arial,
+    sans-serif;
+}
+.rich-message strong {
+  color: #ffffff;
+  font-weight: 780;
+}
+.rich-message code {
+  padding: 1px 5px;
+  border: 1px solid #4d5d52;
+  border-radius: 3px;
+  background: #0c120e;
+  color: #e4f58c;
+  font:
+    13px/1.4 Consolas,
+    'Cascadia Code',
+    monospace;
+}
+.code-block {
+  margin: 12px 0 0;
+  overflow: hidden;
+  border: 1px solid #526157;
+  border-left: 3px solid #d8f06d;
+  background: #090e0b;
+}
+.code-block > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 8px;
+  border-bottom: 1px solid #334138;
+  background: #121a14;
+}
+.code-block span {
+  color: #cfe76b;
+  font:
+    800 10px/1 'Segoe UI',
+    Arial,
+    sans-serif;
+  letter-spacing: 1px;
+}
+.code-block button {
+  border: 1px solid #536158;
+  background: #202b23;
+  color: #e8f0e8;
+  padding: 4px 7px;
+  font:
+    700 11px/1 'Segoe UI',
+    Arial,
+    sans-serif;
+  cursor: pointer;
+}
+.code-block pre {
+  margin: 0;
+  max-height: 330px;
+  overflow: auto;
+  padding: 12px;
+}
+.code-block pre code {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #dce8df;
+  white-space: pre;
+}
+.rich-message ul,
+.rich-message ol {
+  margin: 9px 0 0;
+  padding-left: 24px;
+}
+.rich-message li + li {
+  margin-top: 4px;
+}
+.workflow-strip {
+  display: flex;
+  overflow: auto;
+  padding: 8px 12px;
+  gap: 6px;
+  border-bottom: 1px solid #425047;
+  background: #141b16;
+}
+.workflow-strip span {
+  flex: 0 0 auto;
+  color: #91a293;
+  font:
+    700 10px/1 'Segoe UI Variable',
+    'Aptos',
+    'Segoe UI',
+    Arial,
+    sans-serif;
+}
+.workflow-strip span::before {
+  content: '○';
+  margin-right: 4px;
+  color: #617265;
+}
+.workflow-strip span.complete {
+  color: #dce9df;
+}
+.workflow-strip span.complete::before {
+  content: '●';
+  color: #d8f06d;
+}
+.team-composer {
+  grid-template-columns: 1fr 136px;
+}
+.composer-input {
+  min-width: 0;
+  border: 1px solid #536158;
+  background: #0d120f;
+}
+.format-toolbar {
+  display: flex;
+  gap: 4px;
+  padding: 5px;
+  border-bottom: 1px solid #39473e;
+  background: #172019;
+}
+.format-toolbar button {
+  width: 27px;
+  height: 24px;
+  border: 1px solid #55635a;
+  background: #202b23;
+  color: #e6efe6;
+  padding: 0;
+  font:
+    700 12px/1 'Segoe UI',
+    Arial,
+    sans-serif;
+  cursor: pointer;
+}
+.format-toolbar button:hover {
+  border-color: #d8f06d;
+  color: #d8f06d;
+}
+.format-toolbar .clear-draft {
+  margin-left: auto;
+  color: #d8aaa4;
+}
+.team-composer textarea {
+  width: 100%;
+  min-height: 64px;
+  box-sizing: border-box;
+  border: 0;
+  background: transparent;
+  color: #f2f7f2;
+  font:
+    13px/1.45 'Segoe UI',
+    Arial,
+    sans-serif;
+}
+.draft-state {
+  display: block;
+  padding: 0 8px 7px;
+  color: #aab8ad;
+  font:
+    11px/1 'Segoe UI Variable',
+    'Aptos',
+    'Segoe UI',
+    Arial,
+    sans-serif;
+}
+.team-composer button:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+.team-composer button,
+.project-form button,
+.task-row button {
+  font:
+    800 11px/1 'Segoe UI',
+    Arial,
+    sans-serif;
+}
+.task-row p {
+  font:
+    13px/1.3 'Segoe UI',
+    Arial,
+    sans-serif;
+}
+.agent-activity p {
+  font:
+    13px/1.45 'Segoe UI',
+    Arial,
+    sans-serif;
+  color: #edf3ee;
+}
+.agent-activity small {
+  font:
+    11px/1.4 'Segoe UI',
+    Arial,
+    sans-serif;
+  color: #bbc9bd;
+}
+.agent-activity strong {
+  font:
+    700 14px/1 'Segoe UI',
+    Arial,
+    sans-serif;
+}
+.agent-activity span {
+  font:
+    800 9px/1 'Segoe UI',
+    Arial,
+    sans-serif;
+}
+.task-options {
+  display: grid;
+  grid-template-columns: 110px 132px minmax(120px, 1fr);
+  gap: 7px;
+  padding: 8px;
+  border-bottom: 1px solid #39473e;
+  background: #121914;
+}
+.task-options label {
+  display: grid;
+  gap: 4px;
+  color: #b7c6ba;
+  font:
+    700 10px/1 'Segoe UI Variable',
+    'Aptos',
+    'Segoe UI',
+    Arial,
+    sans-serif;
+}
+.task-options input,
+.task-options select {
+  min-width: 0;
+  border: 1px solid #526157;
+  background: #0a100c;
+  color: #edf4e7;
+  padding: 5px 6px;
+  font:
+    12px/1.2 'Segoe UI',
+    Arial,
+    sans-serif;
+}
+.task-options-toggle {
+  color: #bfe2d4 !important;
+}
+.task-list-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 10px;
+  border-top: 1px solid #425047;
+  background: #151d18;
+}
+.task-list-head strong {
+  color: #dce8df;
+  font:
+    800 11px/1 'Segoe UI Variable',
+    'Aptos',
+    'Segoe UI',
+    Arial,
+    sans-serif;
+}
+.task-list-head button {
+  border: 0;
+  background: transparent;
+  color: #b9cbbb;
+  padding: 2px;
+  font:
+    700 11px/1 'Segoe UI',
+    Arial,
+    sans-serif;
+  cursor: pointer;
+}
+.task-row {
+  grid-template-columns: auto minmax(0, 1fr) auto auto auto;
+}
+.task-row p {
+  display: grid;
+  gap: 3px;
+  white-space: normal;
+}
+.task-row p strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 650;
+}
+.task-row p small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #b5c2b8;
+  font-size: 10px;
+}
+.task-row > button {
+  min-width: 25px;
+  padding: 6px;
+}
+.priority-urgent {
+  border-left: 3px solid #ff8f82;
+}
+.priority-high {
+  border-left: 3px solid #f3b267;
+}
+.priority-low {
+  border-left: 3px solid #6f9782;
+}
+.task-details {
+  position: absolute;
+  z-index: 3;
+  right: 14px;
+  bottom: 14px;
+  left: 195px;
+  max-height: min(500px, calc(100% - 70px));
+  overflow: auto;
+  border: 2px solid #788d78;
+  background: #101711fa;
+  box-shadow: 6px 6px 0 #070a08;
+}
+.task-details header {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 12px;
+  border-bottom: 1px solid #425047;
+  background: #182219;
+}
+.task-details header span,
+.task-details header strong {
+  display: block;
+}
+.task-details header span {
+  color: #d8f06d;
+  font:
+    800 10px/1 'Segoe UI',
+    Arial,
+    sans-serif;
+  letter-spacing: 0.8px;
+}
+.task-details header strong {
+  margin-top: 5px;
+  color: #f0f5f0;
+  font:
+    700 15px/1.3 'Segoe UI Variable',
+    'Aptos',
+    'Segoe UI',
+    Arial,
+    sans-serif;
+}
+.task-details header button {
+  width: 28px;
+  height: 28px;
+  border: 1px solid #687c6c;
+  background: #202a21;
+  color: #e8f0e8;
+  font:
+    18px/1 Arial,
+    sans-serif;
+  cursor: pointer;
+}
+.task-details > div {
+  padding: 12px;
+}
+.task-details h3 {
+  margin: 14px 0 5px;
+  color: #e1f08b;
+  font:
+    800 12px/1 'Segoe UI Variable',
+    'Aptos',
+    'Segoe UI',
+    Arial,
+    sans-serif;
+}
+.task-details h3:first-child {
+  margin-top: 0;
+}
+.task-details p,
+.task-details li {
+  color: #d6e0d8;
+  font:
+    13px/1.5 'Segoe UI Variable',
+    'Aptos',
+    'Segoe UI',
+    Arial,
+    sans-serif;
+}
+.task-details ul {
+  margin: 6px 0;
+  padding-left: 20px;
+}
+.team-console.light-theme {
+  color: #1b251d;
+  border-color: #839983;
+  background: #edf4eaef;
+  box-shadow: 5px 5px 0 #718071;
+}
+.team-console.light-theme .team-console-head,
+.team-console.light-theme .workflow-strip,
+.team-console.light-theme .task-list-head {
+  background: #dce8d9;
+  border-color: #9caa9d;
+}
+.team-console.light-theme .team-console-head strong,
+.team-console.light-theme .project-title strong,
+.team-console.light-theme .rich-message {
+  color: #1b251d;
+}
+.team-console.light-theme .project-list,
+.team-console.light-theme .team-message {
+  background: #e9f0e7;
+  border-color: #b4c2b5;
+}
+.team-console.light-theme .project-title,
+.team-console.light-theme .team-composer,
+.team-console.light-theme .task-list {
+  border-color: #aab9ab;
+}
+.team-console.light-theme .composer-input,
+.team-console.light-theme .format-toolbar,
+.team-console.light-theme .team-composer textarea {
+  background: #f8fcf6;
+  color: #182219;
+}
+.team-console.light-theme .task-row {
+  border-color: #c3d0c4;
+}
+.team-console.large-text .rich-message {
+  font-size: 17px;
+}
+.team-console.large-text .agent-activity p,
+.team-console.large-text .task-row p,
+.team-console.large-text .team-composer textarea {
+  font-size: 15px;
+}
+.team-console.large-text .project-list strong {
+  font-size: 16px;
+}
+/* Modern conversation workspace: deliberately separate from the pixel office. */
+.modern-chat {
+  position: absolute;
+  inset: 32px 28px auto auto;
+  width: min(980px, calc(100vw - 56px));
+  height: min(720px, calc(100vh - 64px));
+  min-width: 560px;
+  min-height: 420px;
+  max-width: calc(100vw - 24px);
+  max-height: calc(100vh - 24px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  color: #ececec;
+  border: 1px solid #444;
+  border-radius: 16px;
+  background: #212121;
+  box-shadow: 0 20px 56px #00000080;
+  font-family: 'Segoe UI Variable', 'Aptos', 'Segoe UI', Arial, sans-serif;
+}
+.modern-chat {
+  font-size: 18px;
+}
+.modern-chat .project-list strong {
+  font-size: 16px;
+}
+.modern-chat .project-list small,
+.modern-chat .project-title small,
+.modern-chat .team-message small,
+.modern-chat .draft-state {
+  font-size: 13px;
+}
+.modern-chat .project-title strong {
+  font-size: 18px;
+}
+.modern-chat .workflow-strip span,
+.modern-chat .task-list-head strong,
+.modern-chat .task-status,
+.modern-chat .task-row > small {
+  font-size: 12px;
+}
+.modern-chat .rich-message,
+.modern-chat .rich-message p,
+.modern-chat .rich-message li {
+  font-size: 18px;
+  line-height: 1.7;
+}
+.modern-chat .rich-message h3 {
+  font-size: 20px;
+  line-height: 1.35;
+}
+.modern-chat .rich-message code {
+  font-size: 16px;
+  line-height: 1.6;
+}
+.modern-chat .code-block pre,
+.modern-chat .code-block pre code {
+  font-family: 'Cascadia Code', Consolas, monospace;
+  font-size: 16px;
+  line-height: 1.65;
+}
+.modern-chat .team-composer textarea {
+  font-size: 17px;
+  line-height: 1.55;
+}
+.modern-chat .task-row p {
+  font-size: 15px;
+  line-height: 1.4;
+}
+.modern-chat .task-row p small {
+  font-size: 12px;
+}
+.modern-chat .team-message {
+  overflow-wrap: anywhere;
+}
+.modern-chat .rich-message pre {
+  max-width: 100%;
+}
+.modern-chat .team-console-head {
+  flex: 0 0 auto;
+  min-height: 60px;
+  padding: 10px 14px;
+  border-color: #353535;
+  background: #212121;
+}
+.modern-chat .team-console-head span {
+  color: #a8a8a8;
+  font:
+    700 10px/1 'Segoe UI Variable',
+    'Aptos',
+    sans-serif;
+  letter-spacing: 0.7px;
+}
+.modern-chat .team-console-head strong {
+  color: #f5f5f5;
+  font:
+    650 15px/1.25 'Segoe UI Variable',
+    'Aptos',
+    sans-serif;
+}
+.modern-chat .panel-move-handle {
+  border-color: #464646 !important;
+  color: #c8c8c8 !important;
+  background: #2c2c2c !important;
+  border-radius: 7px;
+}
+.modern-chat .team-console-actions {
+  gap: 5px;
+}
+.modern-chat .team-console-actions button {
+  width: 30px;
+  height: 30px;
+  border: 1px solid #454545;
+  border-radius: 7px;
+  color: #d2d2d2;
+  background: #2b2b2b;
+  font:
+    600 13px/1 'Segoe UI',
+    Arial,
+    sans-serif;
+}
+.modern-chat .team-console-actions button:hover {
+  background: #393939;
+}
+.modern-chat .team-console-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+}
+.modern-chat .project-list {
+  min-height: 0;
+  padding: 10px;
+  border-right: 1px solid #353535;
+  background: #171717;
+}
+.modern-chat .project-list p {
+  color: #a9a9a9;
+  font:
+    13px/1.45 'Segoe UI Variable',
+    'Aptos',
+    sans-serif;
+}
+.modern-chat .project-list button {
+  margin-bottom: 4px;
+  padding: 10px 11px;
+  border-radius: 8px;
+  color: #d8d8d8;
+}
+.modern-chat .project-list button:hover,
+.modern-chat .project-list button.selected {
+  border-color: transparent;
+  background: #303030;
+}
+.modern-chat .project-list strong {
+  color: #efefef;
+  font:
+    650 13px/1.3 'Segoe UI Variable',
+    'Aptos',
+    sans-serif;
+}
+.modern-chat .project-list small {
+  color: #9b9b9b;
+  font:
+    11px/1.3 'Segoe UI Variable',
+    'Aptos',
+    sans-serif;
+}
+.modern-chat .team-workspace {
+  min-height: 0;
+  position: relative;
+  background: #212121;
+}
+.modern-chat .project-title {
+  flex: 0 0 auto;
+  padding: 13px 18px;
+  border-color: #353535;
+}
+.modern-chat .project-title strong {
+  color: #f2f2f2;
+  font:
+    650 15px/1.25 'Segoe UI Variable',
+    'Aptos',
+    sans-serif;
+}
+.modern-chat .project-title small {
+  color: #a0a0a0;
+  font:
+    11px/1.3 'Segoe UI Variable',
+    'Aptos',
+    sans-serif;
+}
+.modern-chat .project-title span {
+  border: 0;
+  border-radius: 999px;
+  color: #cfd8ff;
+  background: #313854;
+  padding: 5px 9px;
+  font:
+    700 10px/1 'Segoe UI Variable',
+    'Aptos',
+    sans-serif;
+}
+.modern-chat .workflow-strip {
+  flex: 0 0 auto;
+  padding: 7px 18px;
+  border-color: #353535;
+  background: #242424;
+}
+.modern-chat .workflow-strip span {
+  color: #9d9d9d;
+  font-size: 11px;
+}
+.modern-chat .workflow-strip span.complete {
+  color: #e4e4e4;
+}
+.modern-chat .workflow-strip span.complete::before {
+  color: #8ab4f8;
+}
+.modern-chat .team-feed {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: none;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+  padding: 22px max(20px, 6%);
+  background: #212121;
+}
+.modern-chat .team-message {
+  width: fit-content;
+  max-width: min(780px, 88%);
+  margin: 0;
+  padding: 10px 14px;
+  border: 0;
+  border-radius: 14px;
+  background: #2b2b2b;
+}
+.modern-chat .team-message.you {
+  align-self: flex-end;
+  background: #303030;
+  border-bottom-right-radius: 4px;
+}
+.modern-chat .team-message.manager,
+.modern-chat .team-message.claude,
+.modern-chat .team-message.codex {
+  align-self: flex-start;
+  border-bottom-left-radius: 4px;
+}
+.modern-chat .team-message small {
+  color: #a8c7fa;
+  font:
+    700 10px/1 'Segoe UI Variable',
+    'Aptos',
+    sans-serif;
+  letter-spacing: 0.5px;
+}
+.modern-chat .rich-message {
+  color: #ededed;
+  font:
+    15px/1.55 'Segoe UI Variable',
+    'Aptos',
+    'Segoe UI',
+    Arial,
+    sans-serif;
+}
+.modern-chat .rich-message h3 {
+  color: #f0f0f0;
+}
+.modern-chat .rich-message strong {
+  color: #fff;
+}
+.modern-chat .rich-message a {
+  color: #8ab4f8;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  overflow-wrap: anywhere;
+}
+.modern-chat .rich-message code {
+  border-color: #505050;
+  background: #161616;
+  color: #d7e3ff;
+}
+.modern-chat .code-block {
+  border: 1px solid #454545;
+  border-left: 1px solid #454545;
+  border-radius: 9px;
+  background: #161616;
+}
+.modern-chat .code-block > div {
+  border-color: #3d3d3d;
+  background: #1b1b1b;
+}
+.modern-chat .code-block span {
+  color: #c9d7ff;
+}
+.modern-chat .code-block button {
+  border-color: #555;
+  border-radius: 6px;
+  background: #292929;
+}
+.modern-chat .team-composer {
+  flex: 0 0 auto;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  padding: 12px 18px;
+  border-color: #353535;
+  background: #212121;
+}
+.modern-chat .composer-input {
+  border: 1px solid #4b4b4b;
+  border-radius: 14px;
+  background: #2b2b2b;
+  overflow: hidden;
+}
+.modern-chat .composer-input:focus-within {
+  border-color: #7ca9ef;
+  box-shadow: 0 0 0 2px #7ca9ef22;
+}
+.modern-chat .format-toolbar {
+  border: 0;
+  background: transparent;
+}
+.modern-chat .format-toolbar button {
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #bababa;
+}
+.modern-chat .format-toolbar button:hover {
+  color: #fff;
+  background: #3b3b3b;
+}
+.modern-chat .team-composer textarea {
+  min-height: 76px;
+  color: #f2f2f2;
+  font:
+    15px/1.45 'Segoe UI Variable',
+    'Aptos',
+    sans-serif;
+}
+.modern-chat .draft-state {
+  color: #929292;
+}
+.modern-chat .team-composer > button {
+  align-self: end;
+  min-width: 94px;
+  height: 42px;
+  border-radius: 11px;
+  background: #f2f2f2;
+  color: #202020;
+  font:
+    700 13px/1 'Segoe UI Variable',
+    'Aptos',
+    sans-serif;
+}
+.modern-chat .team-composer > button:hover:not(:disabled) {
+  background: #fff;
+}
+.modern-chat .task-list-head,
+.modern-chat .task-list {
+  border-color: #353535;
+  background: #1c1c1c;
+}
+.modern-chat .task-list-head {
+  padding: 8px 18px;
+}
+.modern-chat .task-row {
+  border-color: #313131;
+  background: #1c1c1c;
+}
+.modern-chat .task-row p strong {
+  color: #e6e6e6;
+}
+.modern-chat .task-row p small,
+.modern-chat .task-row > small {
+  color: #a5a5a5;
+}
+.modern-chat .task-row > button {
+  border-radius: 6px;
+  background: #333;
+  color: #d8d8d8;
+}
+.modern-chat .task-details {
+  left: 16px;
+  right: 16px;
+  bottom: 16px;
+  max-height: calc(100% - 32px);
+  border: 1px solid #555;
+  border-radius: 14px;
+  background: #262626;
+  box-shadow: 0 20px 56px #00000099;
+}
+.modern-chat.light-theme {
+  color: #252525;
+  border-color: #d6d6d6;
+  background: #fff;
+  box-shadow: 0 20px 56px #0000002e;
+}
+.modern-chat.light-theme .team-console-head,
+.modern-chat.light-theme .team-workspace,
+.modern-chat.light-theme .team-feed,
+.modern-chat.light-theme .team-composer {
+  background: #fff;
+  border-color: #e6e6e6;
+}
+.modern-chat.light-theme .project-list,
+.modern-chat.light-theme .task-list,
+.modern-chat.light-theme .task-list-head,
+.modern-chat.light-theme .task-row {
+  background: #f7f7f7;
+  border-color: #e5e5e5;
+}
+.modern-chat.light-theme .project-list button.selected,
+.modern-chat.light-theme .project-list button:hover,
+.modern-chat.light-theme .team-message {
+  background: #ececec;
+}
+.modern-chat.light-theme .team-message.you {
+  background: #e4e4e4;
+}
+.modern-chat.light-theme .team-console-head strong,
+.modern-chat.light-theme .project-title strong,
+.modern-chat.light-theme .rich-message,
+.modern-chat.light-theme .task-row p strong {
+  color: #222;
+}
+.modern-chat.light-theme .composer-input {
+  border-color: #c8c8c8;
+  background: #fff;
+}
+.modern-chat.light-theme .team-composer textarea {
+  color: #222;
+}
+.modern-chat.light-theme .format-toolbar {
+  background: #fff;
+}
+.modern-chat.large-text .team-feed {
+  padding-left: max(20px, 4%);
+  padding-right: max(20px, 4%);
+}
+.modern-chat.large-text .rich-message {
+  font-size: 17px;
+}
+.modern-chat.large-text .team-composer textarea {
+  font-size: 16px;
+}
+@media (max-width: 1120px) {
+  .agent-activity-panel {
+    display: none;
+  }
+}
+@media (max-width: 760px) {
+  .team-console {
+    inset: 8px;
+    width: auto;
+  }
+  .team-console-body {
+    grid-template-columns: 130px minmax(0, 1fr);
+  }
+  .team-composer {
+    grid-template-columns: 1fr;
+  }
+  .project-form {
+    grid-template-columns: 1fr;
+  }
+  .task-row {
+    grid-template-columns: auto 1fr auto;
+  }
+  .task-row button {
+    grid-column: 2 / -1;
+  }
+}
+@media (max-width: 760px) {
+  .team-console {
+    min-width: 0;
+    min-height: 0;
+    resize: none;
+  }
+  .team-console-body {
+    min-height: 0;
+  }
+  .team-composer {
+    grid-template-columns: 1fr;
+  }
+}
+.modern-chat.large-text .rich-message,
+.modern-chat.large-text .rich-message p,
+.modern-chat.large-text .rich-message li {
+  font-size: 20px;
+  line-height: 1.7;
+}
+.modern-chat.large-text .rich-message code,
+.modern-chat.large-text .code-block pre,
+.modern-chat.large-text .code-block pre code {
+  font-size: 17px;
+}
+.modern-chat.large-text .team-composer textarea {
+  font-size: 18px;
+}

@@ -37,14 +37,14 @@ export function SettingsModal({
   const [soundLocal, setSoundLocal] = useState(isSoundEnabled);
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Settings">
+    <Modal isOpen={isOpen} onClose={onClose} title="Настройки">
       <MenuItem
         onClick={() => {
           transport.send({ type: 'openSessionsFolder' });
           onClose();
         }}
       >
-        Open Sessions Folder
+        Открыть папку сессий
       </MenuItem>
       <MenuItem
         onClick={() => {
@@ -52,7 +52,7 @@ export function SettingsModal({
           onClose();
         }}
       >
-        Export Layout
+        Экспортировать планировку
       </MenuItem>
       <MenuItem
         onClick={() => {
@@ -60,7 +60,7 @@ export function SettingsModal({
           onClose();
         }}
       >
-        Import Layout
+        Импортировать планировку
       </MenuItem>
       <MenuItem
         onClick={() => {
@@ -68,7 +68,7 @@ export function SettingsModal({
           onClose();
         }}
       >
-        Add Asset Directory
+        Добавить папку с ассетами
       </MenuItem>
       {externalAssetDirectories.map((dir) => (
         <div key={dir} className="flex items-center justify-between py-4 px-10 gap-8">
@@ -89,7 +89,7 @@ export function SettingsModal({
         </div>
       ))}
       <Checkbox
-        label="Sound Notifications"
+        label="Звуковые уведомления"
         checked={soundLocal}
         onChange={() => {
           const newVal = !isSoundEnabled();
@@ -99,21 +99,21 @@ export function SettingsModal({
         }}
       />
       <Checkbox
-        label="Watch All Sessions"
+        label="Следить за всеми сессиями"
         checked={watchAllSessions}
         onChange={onToggleWatchAllSessions}
       />
       <Checkbox
-        label="Instant Detection (Hooks)"
+        label="Мгновенное отслеживание (Hooks)"
         checked={hooksEnabled}
         onChange={onToggleHooksEnabled}
       />
       <Checkbox
-        label="Always Show Labels"
+        label="Всегда показывать подписи"
         checked={alwaysShowOverlay}
         onChange={onToggleAlwaysShowOverlay}
       />
-      <Checkbox label="Debug View" checked={isDebugMode} onChange={onToggleDebugMode} />
+      <Checkbox label="Режим отладки" checked={isDebugMode} onChange={onToggleDebugMode} />
     </Modal>
   );
 }

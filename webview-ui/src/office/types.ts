@@ -194,6 +194,8 @@ export interface Character {
   teamName?: string;
   /** Role name within the team (null for lead) */
   agentName?: string;
+  /** Personal-team visual status shown under the agent name. */
+  personalStatus?: 'limited' | 'working';
   /** Whether this agent is the team lead */
   isTeamLead?: boolean;
   /** ID of the lead agent (set on teammates) */

@@ -9,6 +9,7 @@ import type { AgentStateStore } from './agentStateStore.js';
 import type { AssetCache, SetHooksEnabledSideEffect } from './clientMessageHandler.js';
 import { SERVER_JSON_DIR, SERVER_JSON_NAME } from './constants.js';
 import { createHttpServer } from './httpServer.js';
+import type { TeamOrchestrator } from './teamOrchestrator.js';
 
 /** Discovery file written to ~/.pixel-agents/server.json so hook scripts can find the server. */
 export interface ServerConfig {
@@ -70,6 +71,7 @@ export class PixelAgentsServer {
     staticDir?: string;
     assetCache?: AssetCache;
     onSetHooksEnabled?: SetHooksEnabledSideEffect;
+    orchestrator?: TeamOrchestrator;
   }): Promise<ServerConfig> {
     // Check if another instance already has a server running
     const existing = this.readServerJson();
@@ -97,6 +99,7 @@ export class PixelAgentsServer {
       assetCache: options?.assetCache,
       onHookEvent: (providerId, event) => this.callback?.(providerId, event),
       onSetHooksEnabled: options?.onSetHooksEnabled,
+      orchestrator: options?.orchestrator,
     });
 
     this.app = app;

@@ -100,7 +100,7 @@ export function BottomToolbar({
                 : 'bg-accent hover:bg-accent-bright'
             }
           >
-            + Agent
+            + Агент
           </Button>
           <Dropdown isOpen={isBypassMenuOpen}>
             <DropdownItem onClick={() => handleBypassSelect(true)}>
@@ -123,16 +123,16 @@ export function BottomToolbar({
       <Button
         variant={isEditMode ? 'active' : 'default'}
         onClick={onToggleEditMode}
-        title="Edit office layout"
+        title="Редактировать офис"
       >
-        Layout
+        Планировка
       </Button>
       <Button
         variant={isSettingsOpen ? 'active' : 'default'}
         onClick={onToggleSettings}
-        title="Settings"
+        title="Настройки"
       >
-        Settings
+        Настройки
       </Button>
     </div>
   );
