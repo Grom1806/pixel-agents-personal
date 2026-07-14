@@ -1,20 +1,27 @@
 import fastifyCors from '@fastify/cors';
 import fastifyStatic from '@fastify/static';
 import fastifyWebsocket from '@fastify/websocket';
+import { spawn } from 'child_process';
 import * as crypto from 'crypto';
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import Fastify from 'fastify';
+import * as fs from 'fs';
+import * as os from 'os';
+import * as path from 'path';
 
 import type { AgentRuntime } from './agentRuntime.js';
 import type { AgentStateStore } from './agentStateStore.js';
 import type { AssetCache, SetHooksEnabledSideEffect } from './clientMessageHandler.js';
 import { handleClientMessage } from './clientMessageHandler.js';
 import { HOOK_API_PREFIX, MAX_HOOK_BODY_SIZE } from './constants.js';
-import { TeamOrchestrator } from './teamOrchestrator.js';
+import { projectPreviewManager } from './projectPreview.js';
+import { getTeamDiagnostics, TeamOrchestrator } from './teamOrchestrator.js';
 import {
   archiveTask,
+  clearInactiveTeamStatuses,
   createProject,
   createTask,
+  deleteProject,
   readWorkspace,
   type TaskPriority,
   updateTask,
@@ -109,6 +116,43 @@ function registerHealthRoute(app: FastifyInstance): void {
 
 function registerTeamRoutes(app: FastifyInstance, orchestrator: TeamOrchestrator): void {
   app.get('/api/team/state', async () => readWorkspace());
+  app.get('/api/team/diagnostics', async () => ({ diagnostics: getTeamDiagnostics() }));
+  app.post('/api/team/status/clear', async () => ({
+    cleared: clearInactiveTeamStatuses(),
+  }));
+  app.get<{ Params: { id: string } }>('/api/team/projects/:id/preview', async (request, reply) => {
+    const project = readWorkspace().projects.find((entry) => entry.id === request.params.id);
+    if (!project) return reply.code(404).send({ error: 'Проект не найден.' });
+    return projectPreviewManager.get(project.id);
+  });
+  app.post<{ Params: { id: string } }>('/api/team/projects/:id/preview', async (request, reply) => {
+    const project = readWorkspace().projects.find((entry) => entry.id === request.params.id);
+    if (!project) return reply.code(404).send({ error: 'Проект не найден.' });
+    try {
+      return await projectPreviewManager.start(project);
+    } catch (error) {
+      return reply.code(422).send({
+        error: error instanceof Error ? error.message : 'Не удалось запустить локальный проект.',
+      });
+    }
+  });
+  app.delete<{ Params: { id: string } }>(
+    '/api/team/projects/:id/preview',
+    async (request, reply) => {
+      const project = readWorkspace().projects.find((entry) => entry.id === request.params.id);
+      if (!project) return reply.code(404).send({ error: 'Проект не найден.' });
+      return projectPreviewManager.stop(project.id);
+    },
+  );
+  app.post('/api/team/browse-folder', async (_request, reply) => {
+    try {
+      return { path: await chooseProjectFolder() };
+    } catch (error) {
+      return reply.code(500).send({
+        error: error instanceof Error ? error.message : 'Не удалось открыть выбор папки.',
+      });
+    }
+  });
   app.post<{ Body: { name?: unknown; path?: unknown; description?: unknown } }>(
     '/api/team/projects',
     async (request, reply) => {
@@ -126,6 +170,11 @@ function registerTeamRoutes(app: FastifyInstance, orchestrator: TeamOrchestrator
       };
     },
   );
+  app.delete<{ Params: { id: string } }>('/api/team/projects/:id', async (request, reply) => {
+    const project = deleteProject(request.params.id);
+    if (!project) return reply.code(404).send({ error: 'Project not found.' });
+    return { project };
+  });
   app.post<{
     Body: {
       projectId?: unknown;
@@ -150,7 +199,15 @@ function registerTeamRoutes(app: FastifyInstance, orchestrator: TeamOrchestrator
       : [];
     if (!projectId || !title.trim())
       return reply.code(400).send({ error: 'Выберите проект и опишите задачу.' });
-    return { task: createTask({ projectId, title, priority, dueAt, tags }) };
+    const task = createTask({ projectId, title, priority, dueAt, tags });
+    const project = readWorkspace().projects.find((entry) => entry.id === task.projectId);
+
+    // Normal requests start immediately. Potentially destructive commands still wait for
+    // an explicit confirmation in the UI before any agent is launched.
+    const started = Boolean(
+      project && !needsConfirmation(task.title) && orchestrator.start(task, project),
+    );
+    return { task, started };
   });
   app.patch<{
     Params: { id: string };
@@ -185,18 +242,59 @@ function registerTeamRoutes(app: FastifyInstance, orchestrator: TeamOrchestrator
         return reply.code(409).send({ error: 'Архивную задачу нельзя запускать.' });
       if (needsConfirmation(task.title) && request.body?.confirmed !== true) {
         updateTask(task.id, { status: 'awaiting_confirmation', activeAgent: undefined });
-        return reply
-          .code(428)
-          .send({
-            error: 'Задача может менять или удалять важные данные. Подтвердите запуск.',
-            requiresConfirmation: true,
-          });
+        return reply.code(428).send({
+          error: 'Задача может менять или удалять важные данные. Подтвердите запуск.',
+          requiresConfirmation: true,
+        });
       }
       if (!orchestrator.start(task, project))
         return reply.code(409).send({ error: 'Эта задача уже выполняется.' });
       return { started: true };
     },
   );
+}
+
+function chooseProjectFolder(): Promise<string | null> {
+  if (process.platform !== 'win32') return Promise.resolve(null);
+  const selectionFile = path.join(os.tmpdir(), `pixel-agents-folder-${crypto.randomUUID()}.txt`);
+  const escapedSelectionFile = selectionFile.replace(/'/g, "''");
+  const dialogScript = [
+    'Add-Type -AssemblyName System.Windows.Forms',
+    '$dialog = New-Object System.Windows.Forms.FolderBrowserDialog',
+    "$dialog.Description = 'Выберите папку проекта'",
+    `$selectionFile = '${escapedSelectionFile}'`,
+    'if ($dialog.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK) { [System.IO.File]::WriteAllText($selectionFile, $dialog.SelectedPath, [System.Text.UTF8Encoding]::new($false)) }',
+  ].join('; ');
+  const encodedDialogScript = Buffer.from(dialogScript, 'utf16le').toString('base64');
+  const launcherScript = [
+    '$encoded = ' + `'${encodedDialogScript}'`,
+    'Start-Process -FilePath \'powershell.exe\' -ArgumentList "-NoProfile -STA -EncodedCommand $encoded" -Wait -WindowStyle Normal',
+  ].join('; ');
+  return new Promise((resolve, reject) => {
+    const child = spawn(
+      'powershell.exe',
+      ['-NoProfile', '-NonInteractive', '-Command', launcherScript],
+      {
+        windowsHide: true,
+      },
+    );
+    let errors = '';
+    child.stderr.on('data', (chunk) => (errors += chunk));
+    child.on('error', reject);
+    child.on('close', (code) => {
+      try {
+        if (code !== 0)
+          return reject(new Error(errors.trim() || 'Диалог выбора папки завершился с ошибкой.'));
+        resolve(
+          fs.existsSync(selectionFile)
+            ? fs.readFileSync(selectionFile, 'utf8').trim() || null
+            : null,
+        );
+      } finally {
+        fs.rmSync(selectionFile, { force: true });
+      }
+    });
+  });
 }
 
 function needsConfirmation(title: string): boolean {

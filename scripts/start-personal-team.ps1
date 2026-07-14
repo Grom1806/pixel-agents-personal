@@ -4,8 +4,15 @@ $ErrorActionPreference = 'Stop'
 $repo = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 $tsx = Join-Path $repo 'node_modules\.bin\tsx.cmd'
 $webview = Join-Path $repo 'dist\webview\index.html'
+$electron = Join-Path $repo 'node_modules\electron\dist\electron.exe'
+$desktopEntry = Join-Path $repo 'desktop\main.cjs'
 if (-not (Test-Path $tsx) -or -not (Test-Path $webview)) {
     throw "Pixel Agents Personal не установлен. Запустите 'Install Pixel Agents Personal.cmd' в папке приложения."
+}
+
+if ((Test-Path $electron) -and (Test-Path $desktopEntry)) {
+    Start-Process -FilePath $electron -ArgumentList $desktopEntry -WorkingDirectory $repo
+    exit 0
 }
 $listener = Get-NetTCPConnection -LocalPort $Port -State Listen -ErrorAction SilentlyContinue
 if (-not $listener) {

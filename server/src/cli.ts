@@ -97,6 +97,7 @@ async function main(): Promise<void> {
     const runtime = new AgentRuntime(store, claudeProvider);
     const orchestrator = new TeamOrchestrator();
     orchestrator.recoverInterruptedTasks();
+    orchestrator.startNextTask();
 
     // Wire hook events: HTTP POST -> runtime -> hookEventHandler -> agents
     server.onHookEvent((providerId, event) => {

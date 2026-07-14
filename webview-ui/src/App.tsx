@@ -24,7 +24,7 @@ import { OfficeState } from './office/engine/officeState.js';
 import { isRotatable } from './office/layout/furnitureCatalog.js';
 import { getPetCount } from './office/sprites/petSpriteData.js';
 import { EditTool } from './office/types.js';
-import { isBrowserRuntime, isE2E } from './runtime.js';
+import { isBrowserRuntime, isE2E, isStandaloneRuntime } from './runtime.js';
 import { installTestHooks } from './testHooks.js';
 import { transport } from './transport/index.js';
 
@@ -102,7 +102,7 @@ function App() {
   } = useExtensionMessages(getOfficeState, editor.setLastSavedLayout, isEditDirty);
 
   useEffect(() => {
-    if (!isBrowserRuntime || !layoutReady) return;
+    if (!isStandaloneRuntime || !layoutReady) return;
     const office = getOfficeState();
     const syncTeam = (
       detail: { activeAgent?: 'claude' | 'codex'; limitedAgents?: Array<'claude' | 'codex'> } = {},
@@ -401,7 +401,7 @@ function App() {
         workspaceFolders={workspaceFolders}
       />
 
-      {isBrowserRuntime && (
+      {isStandaloneRuntime && (
         <>
           <AgentActivityPanel />
           <TeamConsole />

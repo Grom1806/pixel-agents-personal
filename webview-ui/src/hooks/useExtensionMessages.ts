@@ -14,7 +14,7 @@ import {
 } from '../office/toolUtils.js';
 import type { OfficeLayout, ToolActivity } from '../office/types.js';
 import { setWallSprites } from '../office/wallTiles.js';
-import { isBrowserRuntime, isE2E } from '../runtime.js';
+import { isE2E, isStandaloneRuntime } from '../runtime.js';
 import { transport } from '../transport/index.js';
 
 export interface SubagentCharacter {
@@ -150,7 +150,7 @@ export function useExtensionMessages(
       // The standalone personal-team office owns exactly two visual agents.
       // Ignore discovered Claude/Codex sessions from other tools and IDEs.
       if (
-        isBrowserRuntime &&
+        isStandaloneRuntime &&
         (msg.type === 'existingAgents' ||
           String(msg.type).startsWith('agent') ||
           String(msg.type).startsWith('subagent'))

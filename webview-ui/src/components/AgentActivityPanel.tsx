@@ -50,6 +50,7 @@ function latestReport(provider: Provider, messages: Message[], task?: Task): str
 
 export function AgentActivityPanel() {
   const [state, setState] = useState<TeamState>(emptyState);
+  const [collapsed, setCollapsed] = useState(false);
   const panelRef = useRef<HTMLElement>(null);
   useEffect(() => {
     const refresh = async () => {
@@ -93,28 +94,39 @@ export function AgentActivityPanel() {
           <span>СТАТУС КОМАНДЫ</span>
           <strong>{task ? 'Текущая работа' : 'Готова к новой задаче'}</strong>
         </div>
+        <button
+          type="button"
+          className="agent-activity-collapse"
+          onClick={() => setCollapsed((value) => !value)}
+          aria-label={collapsed ? 'Развернуть статус команды' : 'Свернуть статус команды'}
+          title={collapsed ? 'Развернуть статус команды' : 'Свернуть статус команды'}
+        >
+          {collapsed ? '▾' : '▴'}
+        </button>
       </header>
-      <div className="agent-activity-list">
-        {members.map(({ provider, name }) => {
-          const paused = task?.limitedAgents?.includes(provider) ?? false;
-          const report = latestReport(provider, state.messages, task);
-          return (
-            <article
-              key={provider}
-              className={`agent-activity ${paused ? 'paused' : task?.activeAgent === provider ? 'active' : ''}`}
-            >
-              <div>
-                <strong>{name}</strong>
-                <span>
-                  {paused ? 'ПАУЗА' : task?.activeAgent === provider ? 'РАБОТАЕТ' : 'ГОТОВ'}
-                </span>
-              </div>
-              <p>{activityFor(provider, task)}</p>
-              {report && <small>{report}</small>}
-            </article>
-          );
-        })}
-      </div>
+      {!collapsed && (
+        <div className="agent-activity-list">
+          {members.map(({ provider, name }) => {
+            const paused = task?.limitedAgents?.includes(provider) ?? false;
+            const report = latestReport(provider, state.messages, task);
+            return (
+              <article
+                key={provider}
+                className={`agent-activity ${paused ? 'paused' : task?.activeAgent === provider ? 'active' : ''}`}
+              >
+                <div>
+                  <strong>{name}</strong>
+                  <span>
+                    {paused ? 'ПАУЗА' : task?.activeAgent === provider ? 'РАБОТАЕТ' : 'ГОТОВ'}
+                  </span>
+                </div>
+                <p>{activityFor(provider, task)}</p>
+                {report && <small>{report}</small>}
+              </article>
+            );
+          })}
+        </div>
+      )}
       <CornerResizeHandle
         targetRef={panelRef}
         anchoredTo="left"

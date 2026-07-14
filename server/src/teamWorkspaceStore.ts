@@ -117,6 +117,17 @@ export function createProject(input: { name: string; path: string; description?:
   save(data);
   return project;
 }
+export function deleteProject(id: string) {
+  const data = readWorkspace();
+  const projectIndex = data.projects.findIndex((project) => project.id === id);
+  if (projectIndex === -1) return null;
+
+  const [project] = data.projects.splice(projectIndex, 1);
+  data.tasks = data.tasks.filter((task) => task.projectId !== id);
+  data.messages = data.messages.filter((message) => message.projectId !== id);
+  save(data);
+  return project;
+}
 export function createTask(input: {
   projectId: string;
   title: string;
@@ -182,6 +193,31 @@ export function updateTask(id: string, patch: Partial<TeamTask>) {
 }
 export function archiveTask(id: string, archived: boolean) {
   return updateTask(id, { archived });
+}
+export function clearInactiveTeamStatuses() {
+  const data = readWorkspace();
+  const resettableStatuses: TaskStatus[] = [
+    'awaiting_confirmation',
+    'needs_attention',
+    'paused',
+    'failed',
+  ];
+  let cleared = 0;
+  for (const task of data.tasks) {
+    if (!resettableStatuses.includes(task.status)) continue;
+    Object.assign(task, {
+      status: 'queued' as TaskStatus,
+      phase: 'plan' as TaskPhase,
+      activeAgent: undefined,
+      limitedAgents: [],
+      contextSnapshot: undefined,
+      result: undefined,
+      updatedAt: new Date().toISOString(),
+    });
+    cleared += 1;
+  }
+  if (cleared > 0) save(data);
+  return cleared;
 }
 export function addTaskMessage(task: TeamTask, actor: TeamActor, text: string) {
   return addMessage({ projectId: task.projectId, taskId: task.id, actor, text });

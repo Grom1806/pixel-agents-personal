@@ -1,6 +1,7 @@
-import { spawn } from 'child_process';
+import { spawn, spawnSync } from 'child_process';
 import * as fs from 'fs';
 
+import { projectPreviewManager } from './projectPreview.js';
 import {
   addTaskMessage,
   readWorkspace,
@@ -13,6 +14,42 @@ const LIMIT_PATTERN =
   /rate limit|usage limit|session limit|quota|too many requests|credit balance|limit reached/i;
 const TRANSIENT_PATTERN =
   /econnreset|etimedout|network error|socket hang up|temporarily unavailable|service unavailable|502|503|504/i;
+
+export interface TeamDiagnostic {
+  id: string;
+  name: string;
+  ready: boolean;
+  detail: string;
+}
+
+export function getTeamDiagnostics(): TeamDiagnostic[] {
+  const commands: Array<Pick<TeamDiagnostic, 'id' | 'name'> & { command: string }> = [
+    { id: 'claude', name: 'Claude Code', command: 'claude.cmd' },
+    { id: 'codex', name: 'Codex', command: 'codex.cmd' },
+    { id: 'node', name: 'Node.js', command: 'node.exe' },
+    { id: 'npm', name: 'npm', command: 'npm.cmd' },
+  ];
+  return commands.map(({ id, name, command }) => {
+    const result = spawnSync(command, ['--version'], {
+      encoding: 'utf8',
+      shell: process.platform === 'win32',
+      windowsHide: true,
+      timeout: 8000,
+    });
+    const output = `${result.stdout ?? ''}\n${result.stderr ?? ''}`.trim();
+    if (!result.error && result.status === 0)
+      return { id, name, ready: true, detail: output.split(/\r?\n/)[0] || 'Доступен.' };
+    return {
+      id,
+      name,
+      ready: false,
+      detail:
+        output.slice(-600) ||
+        result.error?.message ||
+        `Команда ${command} завершилась с кодом ${result.status ?? 'unknown'}.`,
+    };
+  });
+}
 
 export class TeamOrchestrator {
   private running = new Set<string>();
@@ -55,6 +92,7 @@ export class TeamOrchestrator {
         phase: 'plan',
         activeAgent: 'claude',
         limitedAgents: [],
+        result: undefined,
       }) ?? task;
     addTaskMessage(
       current,
@@ -192,13 +230,36 @@ export class TeamOrchestrator {
         ],
       }) ?? task;
     addTaskMessage(updated, 'manager', result);
-    if (status === 'approved') void this.startNextTask();
+    if (status === 'approved') {
+      const project = readWorkspace().projects.find((entry) => entry.id === updated.projectId);
+      if (project)
+        void projectPreviewManager
+          .start(project)
+          .then((preview) =>
+            addTaskMessage(
+              updated,
+              'manager',
+              `Предпросмотр проекта запущен: ${preview.url ?? 'URL не получен.'}`,
+            ),
+          )
+          .catch((error) =>
+            addTaskMessage(
+              updated,
+              'manager',
+              `Не удалось запустить предпросмотр: ${error instanceof Error ? error.message : 'неизвестная ошибка.'}`,
+            ),
+          );
+      void this.startNextTask();
+    }
   }
-  private startNextTask() {
+  /** Start the next safe task after a completed task or server restart. */
+  startNextTask() {
     const state = readWorkspace();
     const priority = { urgent: 0, high: 1, normal: 2, low: 3 };
     const next = state.tasks
-      .filter((task) => task.status === 'queued' && !task.archived)
+      .filter(
+        (task) => task.status === 'queued' && !task.archived && !requiresConfirmation(task.title),
+      )
       .sort(
         (a, b) =>
           priority[a.priority] - priority[b.priority] || a.createdAt.localeCompare(b.createdAt),
@@ -231,7 +292,16 @@ export class TeamOrchestrator {
     const args =
       agent === 'claude'
         ? ['-p', '--permission-mode', 'acceptEdits', '--setting-sources', 'project,local']
-        : ['--ask-for-approval', 'never', 'exec', '--cd', cwd, '--sandbox', 'workspace-write'];
+        : [
+            '--ask-for-approval',
+            'never',
+            'exec',
+            '--cd',
+            cwd,
+            '--sandbox',
+            'workspace-write',
+            '--skip-git-repo-check',
+          ];
     return new Promise((resolve) => {
       const child = spawn(command, args, {
         cwd,
@@ -254,4 +324,10 @@ export class TeamOrchestrator {
       child.stdin.end();
     });
   }
+}
+
+function requiresConfirmation(title: string): boolean {
+  return /\b(rm\s+-rf|remove-item|del\s+\/|drop\s+(table|database)|truncate\s+table|format\s+[a-z]:|delete\s+from|production deploy|deploy to prod)\b/i.test(
+    title,
+  );
 }

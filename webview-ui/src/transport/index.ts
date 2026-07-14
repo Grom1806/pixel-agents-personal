@@ -1,10 +1,10 @@
-import { isBrowserRuntime } from '../runtime.js';
+import { isStandaloneRuntime } from '../runtime.js';
 import { PostMessageTransport } from './postMessageTransport.js';
 import type { MessageTransport } from './types.js';
 import { WebSocketTransport } from './webSocketTransport.js';
 
 function createTransport(): MessageTransport {
-  if (!isBrowserRuntime) {
+  if (!isStandaloneRuntime) {
     return new PostMessageTransport();
   }
   // Standalone browser: connect via WebSocket to the same host serving the SPA

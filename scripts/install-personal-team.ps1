@@ -22,6 +22,9 @@ Write-Host "`nPixel Agents Personal: installing dependencies..." -ForegroundColo
 & npm.cmd install
 if ($LASTEXITCODE -ne 0) { throw "npm dependency installation failed." }
 
+& node -e "require('electron')"
+if ($LASTEXITCODE -ne 0) { throw "Electron desktop runtime installation failed." }
+
 Write-Host "Building application..." -ForegroundColor Cyan
 & npm.cmd run build:extension
 if ($LASTEXITCODE -ne 0) { throw "Server build failed." }

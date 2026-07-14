@@ -6,14 +6,26 @@
  * in a browser.
  */
 
-declare function acquireVsCodeApi(): unknown;
+declare global {
+  interface Window {
+    pixelAgentsDesktop?: {
+      chooseProjectFolder: () => Promise<string | null>;
+    };
+  }
+}
 
-type Runtime = 'vscode' | 'browser';
-// Future: 'cursor' | 'windsurf' | 'electron' | etc.
+type Runtime = 'vscode' | 'desktop' | 'browser';
 
-const runtime: Runtime = typeof acquireVsCodeApi !== 'undefined' ? 'vscode' : 'browser';
+const runtime: Runtime =
+  typeof (globalThis as { acquireVsCodeApi?: unknown }).acquireVsCodeApi !== 'undefined'
+    ? 'vscode'
+    : window.pixelAgentsDesktop
+      ? 'desktop'
+      : 'browser';
 
 export const isBrowserRuntime = runtime === 'browser';
+export const isDesktopRuntime = runtime === 'desktop';
+export const isStandaloneRuntime = runtime !== 'vscode';
 
 /**
  * True only under the Playwright e2e harness, which sets `__PIXEL_AGENTS_E2E`

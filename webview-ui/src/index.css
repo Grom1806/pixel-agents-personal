@@ -352,6 +352,20 @@
 .agent-activity-panel header > div {
   min-width: 0;
 }
+.agent-activity-collapse {
+  flex: 0 0 30px;
+  width: 30px;
+  height: 30px;
+  margin-left: auto;
+  border: 1px solid #536158;
+  color: #dce8df;
+  background: #1d251f;
+  cursor: pointer;
+}
+.agent-activity-collapse:hover {
+  border-color: #d8f06d;
+  color: #d8f06d;
+}
 .team-console-body {
   display: grid;
   grid-template-columns: 180px minmax(0, 1fr);
@@ -477,6 +491,72 @@
     SFMono-Regular,
     Consolas,
     monospace;
+}
+.workflow-progress {
+  flex: 0 0 100%;
+  height: 5px;
+  overflow: hidden;
+  border-radius: 3px;
+  background: #35403a;
+}
+.workflow-progress span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: #d8f06d;
+  transition: width 380ms ease;
+}
+.team-problems {
+  flex: 0 0 auto;
+  max-height: 180px;
+  overflow: auto;
+  margin: 10px 18px 0;
+  border: 1px solid #874545;
+  background: #321f22;
+}
+.team-problems header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  border-bottom: 1px solid #744043;
+  color: #ffd9d9;
+  background: #422428;
+  font:
+    700 12px/1.2 'Segoe UI Variable',
+    'Aptos',
+    sans-serif;
+}
+.team-problems header span {
+  min-width: 20px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  color: #38191c;
+  background: #ffb4b4;
+  text-align: center;
+}
+.team-problems article {
+  padding: 8px 10px;
+  border-bottom: 1px solid #5f363a;
+}
+.team-problems article:last-child {
+  border-bottom: 0;
+}
+.team-problems article strong {
+  color: #ffe0e0;
+  font:
+    650 12px/1.25 'Segoe UI Variable',
+    'Aptos',
+    sans-serif;
+}
+.team-problems article p {
+  margin: 4px 0 0;
+  color: #edc3c6;
+  font:
+    12px/1.4 'Segoe UI Variable',
+    'Aptos',
+    sans-serif;
+  overflow-wrap: anywhere;
 }
 .team-composer {
   display: grid;
@@ -768,6 +848,44 @@
     'Segoe UI',
     Arial,
     sans-serif;
+}
+.project-actions {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.project-actions a,
+.project-actions button {
+  border: 1px solid #5d6c63;
+  border-radius: 5px;
+  background: #25372b;
+  color: #eff8ed;
+  padding: 7px 10px;
+  font:
+    700 12px/1 'Segoe UI',
+    Arial,
+    sans-serif;
+  text-decoration: none;
+  cursor: pointer;
+}
+.project-actions .preview-stop {
+  min-width: 30px;
+  padding-inline: 7px;
+  background: #572b30;
+  border-color: #954e56;
+  color: #ffd9dd;
+}
+.preview-error {
+  margin: 0;
+  padding: 9px 16px;
+  color: #ffb9bf;
+  background: #3b2024;
+  border-bottom: 1px solid #804149;
+  font:
+    12px/1.45 'Segoe UI',
+    Arial,
+    sans-serif;
+  white-space: pre-wrap;
 }
 .team-console-actions {
   display: flex;
@@ -1377,6 +1495,20 @@
   display: grid;
   grid-template-columns: 220px minmax(0, 1fr);
 }
+.modern-chat.text-collapsed {
+  width: min(540px, calc(100vw - 56px));
+  height: auto;
+  min-width: 0;
+  min-height: 0;
+  overflow: visible;
+}
+.modern-chat.text-collapsed .team-console-head {
+  min-height: 58px;
+  border-bottom: 0;
+}
+.modern-chat.text-collapsed .team-error {
+  display: none;
+}
 .modern-chat .project-list {
   min-height: 0;
   padding: 10px;
@@ -1396,10 +1528,39 @@
   border-radius: 8px;
   color: #d8d8d8;
 }
-.modern-chat .project-list button:hover,
-.modern-chat .project-list button.selected {
+.modern-chat .project-list-item {
+  display: flex;
+  align-items: stretch;
+  gap: 2px;
+  margin-bottom: 4px;
+}
+.modern-chat .project-list-item .project-select {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin-bottom: 0;
+  text-align: left;
+}
+.modern-chat .project-list-item:hover .project-select,
+.modern-chat .project-list-item.selected .project-select {
   border-color: transparent;
   background: #303030;
+}
+.modern-chat .project-list-item .project-delete {
+  flex: 0 0 34px;
+  width: 34px;
+  margin: 0;
+  padding: 0 0 2px;
+  border-color: transparent;
+  color: #969696;
+  background: transparent;
+  font:
+    400 24px/1 'Segoe UI Variable',
+    'Aptos',
+    sans-serif;
+}
+.modern-chat .project-list-item .project-delete:hover {
+  color: #fff;
+  background: #6e3030;
 }
 .modern-chat .project-list strong {
   color: #efefef;
@@ -1455,6 +1616,21 @@
   padding: 7px 18px;
   border-color: #353535;
   background: #242424;
+}
+.modern-chat .workflow-progress {
+  background: #404040;
+}
+.modern-chat .workflow-progress span {
+  background: #8ab4f8;
+}
+.modern-chat .team-problems {
+  margin: 10px 18px 0;
+  border-color: #8c4a4d;
+  background: #342326;
+}
+.modern-chat .team-problems header {
+  border-color: #704044;
+  background: #48282c;
 }
 .modern-chat .workflow-strip span {
   color: #9d9d9d;
@@ -1606,6 +1782,35 @@
 }
 .modern-chat .team-composer > button:hover:not(:disabled) {
   background: #fff;
+}
+.project-path-picker {
+  display: flex;
+  min-width: 0;
+  gap: 6px;
+}
+.project-path-picker input {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.project-path-picker button {
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 0 11px;
+  border: 1px solid #5a5a5a;
+  border-radius: 7px;
+  color: #ededed;
+  background: #343434;
+  font:
+    650 12px/1 'Segoe UI Variable',
+    'Aptos',
+    sans-serif;
+}
+.project-path-picker button:hover:not(:disabled) {
+  border-color: #9bc4ff;
+  background: #454545;
+}
+.project-path-picker button:disabled {
+  opacity: 0.55;
 }
 .modern-chat .task-list-head,
 .modern-chat .task-list {
