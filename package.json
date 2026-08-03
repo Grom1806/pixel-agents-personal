@@ -112,30 +112,30 @@
     "knip": "knip"
   },
   "devDependencies": {
-    "@asyncapi/cli": "^6.0.0",
+    "@asyncapi/cli": "^6.0.2",
     "@asyncapi/html-template": "^3.5.6",
     "@asyncapi/modelina": "^5.10.1",
-    "@playwright/test": "^1.58.2",
+    "@playwright/test": "^1.62.1",
     "@types/node": "25.x",
     "@types/pngjs": "^6.0.5",
-    "@types/vscode": "^1.105.0",
+    "@types/vscode": "^1.125.0",
     "@vscode/test-electron": "^2.5.2",
-    "allure-commandline": "^2.38.1",
-    "allure-playwright": "^3.7.1",
-    "electron": "^43.1.0",
-    "esbuild": "^0.28.0",
+    "allure-commandline": "^2.43.0",
+    "allure-playwright": "^3.10.2",
+    "electron": "^43.2.0",
+    "esbuild": "^0.28.1",
     "eslint": "^10.0.3",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-simple-import-sort": "^13.0.0",
     "husky": "^9.1.7",
-    "knip": "^6.3.0",
+    "knip": "^6.29.0",
     "lint-staged": "^16.3.2",
     "npm-run-all": "^4.1.5",
     "pngjs": "^7.0.0",
-    "prettier": "^3.8.1",
-    "tsx": "^4.21.0",
+    "prettier": "^3.9.6",
+    "tsx": "^4.23.1",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.54.0"
+    "typescript-eslint": "^8.65.0"
   },
   "lint-staged": {
     "adapters/vscode/**/*.ts": "eslint --fix",
@@ -147,9 +147,9 @@
     "webview-ui/**/*.{ts,tsx,js,css,json}": "prettier --write"
   },
   "dependencies": {
-    "@fastify/cors": "^11.2.0",
+    "@fastify/cors": "^11.3.0",
     "@fastify/static": "^9.1.1",
-    "@fastify/websocket": "^11.2.0",
-    "fastify": "^5.8.5"
+    "@fastify/websocket": "^11.3.0",
+    "fastify": "^5.11.0"
   }
 }
